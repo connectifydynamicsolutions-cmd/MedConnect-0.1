@@ -1,7 +1,8 @@
-import { sql, getUserId, readBody } from './_shared/util.js';
+import { sql, getUserId, readBody, applyCors } from './_shared/util.js';
 
 // POST /api/moderation { action: 'block'|'report'|'delete_chat', targetId, reason? }
 export default async function handler(req, res) {
+  if (applyCors(req, res)) return res.status(204).end();
   const uid = getUserId(req);
   if (!uid) return res.status(401).json({ error: 'Not authenticated' });
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });

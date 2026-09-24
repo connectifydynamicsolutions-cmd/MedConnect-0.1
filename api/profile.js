@@ -1,7 +1,8 @@
-import { sql, getUserId, safeUser, readBody } from './_shared/util.js';
+import { sql, getUserId, safeUser, readBody, applyCors } from './_shared/util.js';
 import { containsBlockedWord } from './_shared/profanity.js';
 
 export default async function handler(req, res) {
+  if (applyCors(req, res)) return res.status(204).end();
   const uid = getUserId(req);
   if (!uid) return res.status(401).json({ error: 'Not authenticated' });
 

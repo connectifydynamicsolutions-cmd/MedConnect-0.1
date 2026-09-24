@@ -1,11 +1,12 @@
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
-import { sql, readBody } from './_shared/util.js';
+import { sql, readBody, applyCors } from './_shared/util.js';
 
 // POST /api/reset
 //   { action: 'request', email }            -> creates a reset token
 //   { action: 'confirm', token, password }  -> sets a new password
 export default async function handler(req, res) {
+  if (applyCors(req, res)) return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   const body = readBody(req);
   const action = body.action;

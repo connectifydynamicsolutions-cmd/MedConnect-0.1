@@ -1,10 +1,11 @@
-import { sql, getUserId, readBody } from './_shared/util.js';
+import { sql, getUserId, readBody, applyCors } from './_shared/util.js';
 import { sendPushToUser } from './_shared/push.js';
 
 // GET  /api/messages                  -> list of conversations (people + last message)
 // GET  /api/messages?with=USER_ID     -> full conversation with that user
 // POST /api/messages  { to, body }    -> send a message
 export default async function handler(req, res) {
+  if (applyCors(req, res)) return res.status(204).end();
   const uid = getUserId(req);
   if (!uid) return res.status(401).json({ error: 'Not authenticated' });
 

@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { sql, signToken, safeUser, readBody, checkRateLimit, recordAttempt } from './_shared/util.js';
+import { sql, signToken, safeUser, readBody, checkRateLimit, recordAttempt, applyCors } from './_shared/util.js';
 
 const GOOGLE_CLIENT_ID = '402347146267-47oui3qdf8sir6do5115ejdi5gdgok6r.apps.googleusercontent.com';
 
@@ -20,6 +20,7 @@ async function verifyGoogleToken(credential) {
 }
 
 export default async function handler(req, res) {
+  if (applyCors(req, res)) return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   try {
     const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown';

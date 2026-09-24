@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { sql } from './_shared/util.js';
+import { sql, applyCors } from './_shared/util.js';
 
 const DEMO = [
   ['Dr Sana Rahman','sana@demo.com','MRCP — PACES','Pakistan','GMT+5 (PKT)','Pastest','Evenings'],
@@ -17,6 +17,7 @@ const DEMO = [
 ];
 
 export default async function handler(req, res) {
+  if (applyCors(req, res)) return res.status(204).end();
   if ((req.query.key || '') !== process.env.JWT_SECRET)
     return res.status(403).json({ error: 'Forbidden — append ?key=YOUR_JWT_SECRET' });
   try {
